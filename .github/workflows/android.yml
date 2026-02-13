@@ -1,15 +1,14 @@
 name: Android APK (Debug)
 
 on:
+  workflow_dispatch:
   push:
     branches: [ main, master ]
   pull_request:
-  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -19,7 +18,7 @@ jobs:
         with:
           command: buildozer android debug
 
-      - name: Upload debug APK
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: debug-apk
