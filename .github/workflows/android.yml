@@ -48,7 +48,7 @@ jobs:
           ln -sf "$ANDROIDSDK/cmdline-tools/latest/bin/sdkmanager" "$ANDROIDSDK/tools/bin/sdkmanager"
           chmod +x "$ANDROIDSDK/tools/bin/sdkmanager"
 
-      - name: Install Android SDK packages (stable)
+            - name: Install Android SDK packages (stable)
         env:
           ANDROIDSDK: /home/runner/.buildozer/android/platform/android-sdk
         run: |
@@ -56,7 +56,7 @@ jobs:
           yes | sdkmanager --licenses >/dev/null || true
           sdkmanager "platform-tools" "platforms;android-31" "build-tools;31.0.0"
 
-            - name: Build APK
+      - name: Build APK
         env:
           ANDROIDSDK: /home/runner/.buildozer/android/platform/android-sdk
         run: |
@@ -68,3 +68,4 @@ jobs:
         with:
           name: debug-apk
           path: bin/*.apk
+
