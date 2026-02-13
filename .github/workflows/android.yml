@@ -32,20 +32,15 @@ jobs:
           pip install cython==0.29.36
           pip install buildozer
 
-      - name: Build APK (auto-accept licenses)
+            - name: Build APK (auto-accept licenses)
         env:
-          # This makes Android SDK installs non-interactive
           ANDROIDSDK: /home/runner/.buildozer/android/platform/android-sdk
         run: |
           mkdir -p "$ANDROIDSDK/licenses"
-          # Pre-accept common Android SDK licenses used by sdkmanager
-          cat > "$ANDROIDSDK/licenses/android-sdk-license" <<'EOF'
-24333f8a63b6825ea9c5514f83c2829b004d1fee
-EOF
-          cat > "$ANDROIDSDK/licenses/android-sdk-preview-license" <<'EOF'
-84831b9409646a918e30573bab4c9c91346d8abd
-EOF
+          echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" > "$ANDROIDSDK/licenses/android-sdk-license"
+          echo "84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROIDSDK/licenses/android-sdk-preview-license"
           buildozer android debug
+
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
