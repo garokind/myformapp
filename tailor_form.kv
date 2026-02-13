@@ -1,0 +1,331 @@
+#:kivy 2.2.1
+
+<SoftCard@BoxLayout>:
+    orientation: "vertical"
+    spacing: dp(10)
+    padding: dp(10)
+    size_hint_y: None
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [10, 10, 10, 10]
+
+<HeaderBar@Label>:
+    size_hint_y: None
+    height: dp(44)
+    bold: True
+    color: .1, .1, .1, 1
+    halign: "center"
+    valign: "middle"
+    text_size: self.size
+    canvas.before:
+        Color:
+            rgba: .97, .66, .72, 1
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [8, 8, 8, 8]
+
+<RTLLabel@Label>:
+    color: .12, .12, .12, 1
+    halign: "right"
+    valign: "middle"
+    text_size: self.size
+
+<ValueInput@TextInput>:
+    multiline: False
+    write_tab: False
+    halign: "right"
+    padding: [dp(8), dp(10), dp(8), dp(10)]
+    background_normal: ""
+    background_active: ""
+    background_color: .98, .98, .98, 1
+    foreground_color: .1, .1, .1, 1
+    size_hint_y: None
+    height: dp(40)
+    cursor_color: .2, .2, .2, 1
+
+<RowField@BoxLayout>:
+    key_name: ""
+    label_text: ""
+    spacing: dp(8)
+    size_hint_y: None
+    height: dp(44)
+    orientation: "horizontal"
+    ValueInput:
+        id: field_input
+        on_parent: root.parent and app.root.register_input(root.key_name, self)
+    RTLLabel:
+        text: root.label_text + " :"
+        size_hint_x: .42
+
+<MeasureRow@BoxLayout>:
+    label_text: ""
+    key_name: ""
+    size_hint_y: None
+    height: dp(52)
+    canvas.before:
+        Color:
+            rgba: (.99, .91, .93, 1) if int(self.key_name.split("_")[-1]) % 2 else (1, 1, 1, 1)
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    ValueInput:
+        on_parent: root.parent and app.root.register_input(root.key_name, self)
+        size_hint_x: .38
+        canvas.after:
+            Color:
+                rgba: 0, 0, 0, 1
+            Line:
+                rectangle: (self.x, self.y, self.width, self.height)
+                width: 1
+    RTLLabel:
+        text: root.label_text
+        size_hint_x: .62
+        bold: True
+        canvas.before:
+            Color:
+                rgba: 0, 0, 0, 1
+            Line:
+                rectangle: (self.x, self.y, self.width, self.height)
+                width: 1
+
+<TailorFormRoot>:
+    orientation: "vertical"
+    padding: dp(10)
+    spacing: dp(10)
+    canvas.before:
+        Color:
+            rgba: 1, .95, .96, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    ScrollView:
+        do_scroll_x: True
+        do_scroll_y: True
+
+        GridLayout:
+            cols: 2
+            spacing: dp(10)
+            size_hint: None, None
+            width: max(self.minimum_width, dp(1100))
+            height: self.minimum_height
+            padding: [dp(6), dp(6), dp(6), dp(20)]
+
+            SoftCard:
+                width: dp(510)
+                size_hint_x: None
+                spacing: dp(10)
+
+                SoftCard:
+                    height: self.minimum_height
+                    HeaderBar:
+                        text: "مشخصات مشتری"
+                    RowField:
+                        key_name: "date"
+                        label_text: "تاریخ"
+                    RowField:
+                        key_name: "delivery_date"
+                        label_text: "تاریخ تحویل"
+                    RowField:
+                        key_name: "full_name"
+                        label_text: "نام و نام خانوادگی"
+                    RowField:
+                        key_name: "phone"
+                        label_text: "شماره تماس"
+                    RowField:
+                        key_name: "deposit"
+                        label_text: "بیعانه"
+                    RowField:
+                        key_name: "total_amount"
+                        label_text: "مبلغ کل"
+
+                SoftCard:
+                    height: self.minimum_height
+                    HeaderBar:
+                        text: "مشخصات جنس"
+                    RowField:
+                        key_name: "fabric_type"
+                        label_text: "نوع پارچه"
+                    RowField:
+                        key_name: "received_fabric_meter"
+                        label_text: "متراژ پارچه دریافتی"
+                    RowField:
+                        key_name: "fabric_color"
+                        label_text: "رنگ پارچه"
+                    RowField:
+                        key_name: "thread_color"
+                        label_text: "رنگ نخ"
+                    RowField:
+                        key_name: "button_type"
+                        label_text: "نوع دکمه"
+                    RowField:
+                        key_name: "button_color"
+                        label_text: "رنگ دکمه"
+                    RowField:
+                        key_name: "zip_type_color"
+                        label_text: "نوع و رنگ زیپ"
+
+                SoftCard:
+                    height: dp(290)
+                    HeaderBar:
+                        text: "توضیحات"
+                    TextInput:
+                        multiline: True
+                        write_tab: False
+                        halign: "right"
+                        padding: [dp(8), dp(10), dp(8), dp(10)]
+                        background_normal: ""
+                        background_active: ""
+                        background_color: .99, .99, .99, 1
+                        foreground_color: .1, .1, .1, 1
+                        on_parent: app.root.register_input("notes", self)
+
+            SoftCard:
+                width: dp(560)
+                size_hint_x: None
+                height: app.root.table_height + dp(16)
+                HeaderBar:
+                    text: "اندازه های اندام"
+
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: self.minimum_height
+                    spacing: dp(0)
+                    canvas.before:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            rectangle: (self.x, self.y, self.width, self.height)
+                            width: 1
+
+                    BoxLayout:
+                        size_hint_y: None
+                        height: dp(52)
+                        canvas.before:
+                            Color:
+                                rgba: .97, .66, .72, 1
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size
+                        RTLLabel:
+                            text: "سایز"
+                            bold: True
+                            size_hint_x: .38
+                            canvas.after:
+                                Color:
+                                    rgba: 0, 0, 0, 1
+                                Line:
+                                    rectangle: (self.x, self.y, self.width, self.height)
+                                    width: 1
+                        RTLLabel:
+                            text: "اندازه های اندام"
+                            bold: True
+                            size_hint_x: .62
+                            canvas.after:
+                                Color:
+                                    rgba: 0, 0, 0, 1
+                                Line:
+                                    rectangle: (self.x, self.y, self.width, self.height)
+                                    width: 1
+
+                    MeasureRow:
+                        key_name: "measure_1"
+                        label_text: "قد بالاتنه جلو"
+                    MeasureRow:
+                        key_name: "measure_2"
+                        label_text: "قد بالاتنه پشت"
+                    MeasureRow:
+                        key_name: "measure_3"
+                        label_text: "کارور جلو"
+                    MeasureRow:
+                        key_name: "measure_4"
+                        label_text: "کارور پشت"
+                    MeasureRow:
+                        key_name: "measure_5"
+                        label_text: "دور سینه"
+                    MeasureRow:
+                        key_name: "measure_6"
+                        label_text: "فاصله سینه"
+                    MeasureRow:
+                        key_name: "measure_7"
+                        label_text: "بلندی سینه"
+                    MeasureRow:
+                        key_name: "measure_8"
+                        label_text: "دور گردن"
+                    MeasureRow:
+                        key_name: "measure_9"
+                        label_text: "حلقه آستین"
+                    MeasureRow:
+                        key_name: "measure_10"
+                        label_text: "قد آستین"
+                    MeasureRow:
+                        key_name: "measure_11"
+                        label_text: "سرشانه"
+                    MeasureRow:
+                        key_name: "measure_12"
+                        label_text: "دور بازو"
+                    MeasureRow:
+                        key_name: "measure_13"
+                        label_text: "دور مچ"
+                    MeasureRow:
+                        key_name: "measure_14"
+                        label_text: "دور کمر"
+                    MeasureRow:
+                        key_name: "measure_15"
+                        label_text: "دور باسن"
+                    MeasureRow:
+                        key_name: "measure_16"
+                        label_text: "بلندی باسن"
+                    MeasureRow:
+                        key_name: "measure_17"
+                        label_text: "بلندی فاق"
+                    MeasureRow:
+                        key_name: "measure_18"
+                        label_text: "دور ران"
+                    MeasureRow:
+                        key_name: "measure_19"
+                        label_text: "دور زانو"
+                    MeasureRow:
+                        key_name: "measure_20"
+                        label_text: "دور مچ پا"
+                    MeasureRow:
+                        key_name: "measure_21"
+                        label_text: "قد لباس"
+                    MeasureRow:
+                        key_name: "measure_22"
+                        label_text: "قد دامن"
+                    MeasureRow:
+                        key_name: "measure_23"
+                        label_text: "قد شلوار"
+
+    BoxLayout:
+        size_hint_y: None
+        height: dp(52)
+        spacing: dp(10)
+
+        Button:
+            text: "ذخیره"
+            background_normal: ""
+            background_color: .90, .62, .69, 1
+            color: 1, 1, 1, 1
+            on_release: root.save_data()
+        Button:
+            text: "بارگذاری"
+            background_normal: ""
+            background_color: .84, .72, .76, 1
+            color: 1, 1, 1, 1
+            on_release: root.load_data()
+        Button:
+            text: "پاک کردن"
+            background_normal: ""
+            background_color: .95, .76, .80, 1
+            color: .2, .2, .2, 1
+            on_release: root.clear_data()
+
+TailorFormRoot:
