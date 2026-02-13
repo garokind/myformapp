@@ -35,20 +35,16 @@ jobs:
       - name: Prepare Android SDK cmdline-tools + legacy sdkmanager path
         run: |
           ANDROIDSDK="/home/runner/.buildozer/android/platform/android-sdk"
-
-          # Install Android cmdline-tools (contains sdkmanager)
           mkdir -p "$ANDROIDSDK/cmdline-tools"
           cd "$ANDROIDSDK/cmdline-tools"
           wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O cmdline-tools.zip
           unzip -q cmdline-tools.zip
           mv cmdline-tools latest
-
-          # Create legacy path expected by buildozer/p4a: $ANDROIDSDK/tools/bin/sdkmanager
           mkdir -p "$ANDROIDSDK/tools/bin"
           ln -sf "$ANDROIDSDK/cmdline-tools/latest/bin/sdkmanager" "$ANDROIDSDK/tools/bin/sdkmanager"
           chmod +x "$ANDROIDSDK/tools/bin/sdkmanager"
 
-            - name: Install Android SDK packages (stable)
+      - name: Install Android SDK packages (stable)
         env:
           ANDROIDSDK: /home/runner/.buildozer/android/platform/android-sdk
         run: |
@@ -61,6 +57,9 @@ jobs:
           ANDROIDSDK: /home/runner/.buildozer/android/platform/android-sdk
         run: |
           export PATH="$ANDROIDSDK/cmdline-tools/latest/bin:$ANDROIDSDK/platform-tools:$ANDROIDSDK/tools/bin:$PATH"
+          mkdir -p "$ANDROIDSDK/licenses"
+          echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" > "$ANDROIDSDK/licenses/android-sdk-license"
+          echo "84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROIDSDK/licenses/android-sdk-preview-license"
           buildozer -v android debug
 
       - name: Upload APK
@@ -68,4 +67,3 @@ jobs:
         with:
           name: debug-apk
           path: bin/*.apk
-
