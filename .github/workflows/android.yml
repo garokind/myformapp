@@ -57,24 +57,21 @@ jobs:
           ANDROIDSDK: /home/runner/.buildozer/android/platform/android-sdk
         run: |
           export PATH="$ANDROIDSDK/cmdline-tools/latest/bin:$ANDROIDSDK/platform-tools:$ANDROIDSDK/tools/bin:$PATH"
-
           mkdir -p "$ANDROIDSDK/licenses"
           echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" > "$ANDROIDSDK/licenses/android-sdk-license"
           echo "84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROIDSDK/licenses/android-sdk-preview-license"
 
           set -o pipefail
+          buildozer -v android debug 2>&1 | tee build.log || true
 
-          # Run build; if it fails, print useful logs automatically:
-          buildozer -v android debug || {
-            echo ""
-            echo "==================== BUILD FAILED: showing logs ===================="
-            echo "---- p4a/buildozer logs (last 250 lines each) ----"
-            find .buildozer -type f \( -name "*.log" -o -name "logcat.txt" \) -print -exec tail -n 250 {} \; || true
-            echo "---- gradle logs (last 250 lines) ----"
-            find .buildozer -type f -path "*gradle*" -name "*.log" -print -exec tail -n 250 {} \; || true
-            echo "===================================================================="
-            exit 1
-          }
+          echo ""
+          echo "==================== build.log (last 250 lines) ===================="
+          tail -n 250 build.log || true
+          echo "===================================================================="
+
+          # Fail the job if build did not produce an APK
+          ls -la bin || true
+          test -n "$(ls -1 bin/*.apk 2>/dev/null)" || exit 1
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
