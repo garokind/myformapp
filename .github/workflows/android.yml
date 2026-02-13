@@ -48,21 +48,20 @@ jobs:
           ln -sf "$ANDROIDSDK/cmdline-tools/latest/bin/sdkmanager" "$ANDROIDSDK/tools/bin/sdkmanager"
           chmod +x "$ANDROIDSDK/tools/bin/sdkmanager"
 
-      - name: Build APK (auto-accept licenses)
+      - name: Install Android SDK packages (stable)
         env:
           ANDROIDSDK: /home/runner/.buildozer/android/platform/android-sdk
         run: |
           export PATH="$ANDROIDSDK/cmdline-tools/latest/bin:$ANDROIDSDK/platform-tools:$ANDROIDSDK/tools/bin:$PATH"
-
-          # Pre-accept licenses in the exact SDK folder buildozer uses
-          mkdir -p "$ANDROIDSDK/licenses"
-          echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" > "$ANDROIDSDK/licenses/android-sdk-license"
-          echo "84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROIDSDK/licenses/android-sdk-preview-license"
-
-          # Try to accept all licenses non-interactively (won't fail build if it prints warnings)
           yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager "platform-tools" "platforms;android-31" "build-tools;31.0.0"
 
-          buildozer android debug
+            - name: Build APK
+        env:
+          ANDROIDSDK: /home/runner/.buildozer/android/platform/android-sdk
+        run: |
+          export PATH="$ANDROIDSDK/cmdline-tools/latest/bin:$ANDROIDSDK/platform-tools:$ANDROIDSDK/tools/bin:$PATH"
+          buildozer -v android debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
